@@ -1,8 +1,7 @@
 class Oystercard
   MAXIMUM_BALANCE = 90
   MINIMUM_FARE = 1
-  attr_reader :balance
-  attr_reader :entry_station
+  attr_reader :balance, :entry_station
 
   def initialize
     @balance = 0
@@ -36,6 +35,5 @@ private
   def deduct(amount)
     @balance -= amount
   end
-
 
 end
