@@ -3,8 +3,6 @@ require "oystercard"
 describe Oystercard do
 let(:station) { double :station }
 
-  it {is_expected.to respond_to(:entry_station) }
-
   it 'checks to see if the balance is 0' do
     expect(subject.balance).to eq 0
   end
@@ -19,13 +17,6 @@ let(:station) { double :station }
       expect{ subject.top_up(Oystercard::MINIMUM_FARE) }.to raise_error "Maximum balance of #{maximum_balance} exceeded"
     end
   end
-  
-  # describe "#deduct" do
-  #   it "deducts from balance" do
-  #     subject.top_up(10)
-  #     expect{ subject.deduct(3) }.to change{ subject.balance }.by -3
-  #   end
-  # end
 
   describe 'status of card' do
 
@@ -41,7 +32,7 @@ let(:station) { double :station }
     it 'touch out' do
       subject.top_up(Oystercard::MINIMUM_FARE)
       subject.touch_in(station)
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject).not_to be_in_journey
     end
   end
@@ -54,7 +45,7 @@ let(:station) { double :station }
     it 'charge balance on touch out' do
       subject.top_up(Oystercard::MINIMUM_FARE)
       subject.touch_in(station)
-      expect{ subject.touch_out }.to change{ subject.balance }.by -Oystercard::MINIMUM_FARE
+      expect{ subject.touch_out(station) }.to change{ subject.balance }.by -Oystercard::MINIMUM_FARE
     end
 
     it "remembers entry station" do
@@ -63,4 +54,18 @@ let(:station) { double :station }
         expect(subject.entry_station).to eq station 
     end
 
+    describe "#journeies" do
+      it "New cards has empty history" do
+      expect(subject.journeies).to be_empty
+      end
+
+      it "card keeps history" do
+        subject.top_up(Oystercard::MINIMUM_FARE)
+        subject.touch_in(station)
+        subject.touch_out(station)
+        expect(subject.journeies).not_to be_empty
+      end
+
+    end
+    
 end
