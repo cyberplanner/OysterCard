@@ -5,8 +5,6 @@ let(:station) { double :station }
 let(:maximum_balance) { Oystercard::MAXIMUM_BALANCE }
 let(:minimum_balance) { Oystercard::MINIMUM_FARE }
 let(:empty_card) { Oystercard.new }
-#let(:min_card) { empty_card.top_up(minimum_balance) }
-#let(:max_card) { empty_card.top_up(maximum_balance) }
 
 describe '#balance' do
     it 'checks to see if the balance is 0' do
@@ -65,19 +63,6 @@ describe '#balance' do
       it "New cards have an empty history" do
         expect(subject.journeies).to be_empty
       end
-
-      # it "it remembers entry station" do
-      #     empty_card.top_up(minimum_balance)
-      #     empty_card.touch_in(station)
-      #     expect(empty_card.entry_station).to eq station
-      # end
-
-      #   it 'it remembers exit station' do
-      #     empty_card.top_up(minimum_balance)
-      #     empty_card.touch_in(station)
-      #     empty_card.touch_out(station)
-      #     expect(empty_card.exit_station).to eq station
-      #   end
 
         it "the card keeps history" do
           empty_card.top_up(minimum_balance)
