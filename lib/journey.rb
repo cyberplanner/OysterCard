@@ -21,6 +21,9 @@ class Journey
     !!entry_station && !!exit_station
   end
 
+  # def in_journey?
+  #   !!entry_station && exit_station = nil
+  # end
 
   def fare
     if complete?

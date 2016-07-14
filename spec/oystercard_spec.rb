@@ -25,51 +25,48 @@ describe '#balance' do
 
   describe 'status of card' do
 
-    it 'is initially not in a journey' do
-      expect(empty_card).not_to be_in_journey
-    end
+    # it 'is initially not in a journey' do
+    #   expect(empty_card).not_to be_in_journey
+    # end
 
-    it 'touch in' do
-      empty_card.top_up(minimum_balance)
-      empty_card.touch_in(station)
-      expect(empty_card).to be_in_journey
-    end
-    it 'touch out' do
-      empty_card.top_up(minimum_balance)
-      empty_card.touch_in(station)
-      empty_card.touch_out(station)
-      expect(empty_card).not_to be_in_journey
+    describe 'after touch in' do
+      # let(:entry_station) { double :station }
+      # let(:exit_station) { double :station }
+      # let(:journey){ Journey.new(entry_station: station, exit_station: station) }
+
+      it "New cards have an empty history" do
+        expect(subject.journeies).to be_empty
+      end
+
+      before do
+        empty_card.top_up(minimum_balance)
+        empty_card.touch_in(station)
+      end
+
+      # it 'touch in' do
+      #   expect(empty_card).to be_in_journey
+      # end
+      #
+      # it 'touch out' do
+      #   empty_card.touch_out(station)
+      #   expect(empty_card).not_to be_in_journey
+      # end
+
+      it 'charge balance on touch out' do
+        expect{ empty_card.touch_out(station) }.to change{ empty_card.balance }.by -minimum_balance
+      end
+
+      it "the card keeps history" do
+        empty_card.touch_out(station)
+        expect(empty_card.journeies[0].entry_station).to eq station
+      end
     end
 
     it "checks balance on touch in" do
       empty_card.balance < minimum_balance
       expect{ empty_card.touch_in(station) }.to raise_error "insufficient funds"
     end
-    it 'charge balance on touch out' do
-      empty_card.top_up(minimum_balance)
-      empty_card.touch_in(station)
-      expect{ empty_card.touch_out(station) }.to change{ empty_card.balance }.by -minimum_balance
-    end
 
   end
-
-
-
-    describe "#journeies" do
-      let(:entry_station) { double :station }
-      let(:exit_station) { double :station }
-      let(:journey){ Journey.new(entry_station: station, exit_station: station) }
-
-      it "New cards have an empty history" do
-        expect(subject.journeies).to be_empty
-      end
-
-        it "the card keeps history" do
-          empty_card.top_up(minimum_balance)
-          empty_card.touch_in(entry_station)
-          empty_card.touch_out(exit_station)
-          expect(empty_card.journeies[0].entry_station).to eq entry_station
-        end
-    end
 
 end
